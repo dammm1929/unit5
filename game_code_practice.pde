@@ -11,54 +11,57 @@ float vx, vy;
 float ax, ay;
 
 // target
-float x, y,  //position
+float player1x, player1y,  //position
       d;     //diameter
       
-float x2, y2;
+float player2x, player2y;
 
 // key variables
 boolean wkey,akey,skey,dkey; //false by default
 boolean upkey,leftkey,downkey,rightkey;
 
-//gravity
-//float ax, ay;
-  //vx += ax;
-  //vy += ay;
+
 
 
 void setup() {
-  size(600,600, P2D);
+  size(600,600);
   frameRate(120);
   ballx = 300;
   bally = 200;
   balld = 50;
-  vx = 3;
-  vy = -2;
-  x = 200;
-  y = height/2;
+  vx = 2;
+  vy = -1.5;
+  player1x = 200;
+  player1y = height/2;
   d = 100;
-  x2 = 400;
-  y2 = height/2;
+  player2x = 400;
+  player2y = height/2;
+  
+  ax = 0;
+  ay = 0.1;
+
+  
 }
 
 void draw() {
   background(red);
   fill(blue);
-  circle(x,y,d);
+  circle(player1x,player1y,d);
   fill(green);
-  circle(x2,y2,d);
+  circle(player2x,player2y,d);
   strokeWeight(4);
   stroke(255);
+  vx += ax;
+  vy += ay/5;
+  if (wkey) player1y -= 2.5;
+  if (akey) player1x -= 2.5;
+  if (skey) player1y += 2.5;
+  if (dkey) player1x += 2.5;
   
-  if (wkey) y -= 2.5;
-  if (akey) x -= 2.5;
-  if (skey) y += 2.5;
-  if (dkey) x += 2.5;
-  
-  if (upkey) y2 -= 2.5;
-  if (leftkey) x2 -= 2.5;
-  if (downkey) y2 += 2.5;
-  if (rightkey) x2 += 2.5;
+  if (upkey) player2y -= 2.5;
+  if (leftkey) player2x -= 2.5;
+  if (downkey) player2y += 2.5;
+  if (rightkey) player2x += 2.5;
   
   fill(orange);
   circle(ballx, bally, balld);
@@ -67,30 +70,36 @@ void draw() {
   bally += vy;
   
   if (bally <= balld/2) { //top
-    vy *= -0.95;
+    vy *= -0.99;
     bally = balld/2;
   }
   
   if (bally >= height-balld/2) { //bottom
-    vy *= -0.95;
+    vy *= -0.99;
     bally = height-balld/2;
   }
   
   if (ballx <= balld/2) { //right
-    vx *= -0.95;
+    vx *= -0.99;
     ballx = balld/2;
   }
   
   if (ballx >= width-balld/2) { //left
-    vx *= -0.95;
+    vx *= -0.99;
     ballx = width - balld/2;
   }
   
   
-  if (dist(x, y, ballx, bally) <= d/2 + balld/2 || dist(x2, y2, ballx, bally) <= d/2 + balld/2) {
-    vx = vy = 0;
+  if (dist(player1x, player1y, ballx, bally) <= d/2 + balld/2) {
+    vx = (ballx - player1x)/40;
+    vy = (bally - player1y)/20;
+
   }
   
+  if (dist(player2x, player2y, ballx, bally) <= d/2 + balld/2) {
+    vx = (ballx - player2x)/40;
+    vy = (bally - player2y)/20;
+  }
   
 }
 
