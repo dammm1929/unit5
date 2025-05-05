@@ -24,9 +24,12 @@ float sx = 480;
 float sy = 450;
 float sw = 40;
 float sh = 350;
+float pause = 0;
 
 int score1;
+int score1M;
 int score2;
+int score2M;
 
 
 void setup() {
@@ -45,27 +48,64 @@ void setup() {
   
   ax = 0;
   ay = 0.1;
+  
+  score1M = score1;
+  score2M = score2;
 
   
 }
 
-void player1() {
-  
-  fill(blue);
+void player1() { //bron
   strokeWeight(4);
-  stroke(255);
-  circle(player1x,player1y,d);
+  noStroke();
+  fill(#7C4E20); //ligher brown
+  ellipse(player1x-50, player1y-5, 20,30); //ears
+  ellipse(player1x+50, player1y-5, 20,30);
+  fill(#311E0C); //hair
+  circle(player1x, player1y,d);
+  fill(#7C4E20); //ligher brown
+  ellipse(player1x, player1y-10, 95,70);
+  fill(#F7F7F7);
+  ellipse(player1x-20, player1y-15, 15,6); //eyes
+  ellipse(player1x+20, player1y-15, 15,6);
+  fill(#0D0700);
+  ellipse(player1x-20, player1y-15, 8,8); //pupils
+  ellipse(player1x+20, player1y-15, 8,8);
+  fill(#7C4E20);
+  ellipse(player1x-20, player1y-9, 25,8); //eyelid
+  ellipse(player1x+20, player1y-9, 25,8);
+  fill(#311E0C); //brow left
+  ellipse(player1x-20, player1y-25, 18,5);
+  fill(#7C4E20);
+  ellipse(player1x-20, player1y-22, 18,5);
+  fill(#311E0C); //brow right
+  ellipse(player1x+20, player1y-25, 18,5);
+  fill(#7C4E20);
+  ellipse(player1x+20, player1y-22, 18,5);
+  fill(#F7F7F7);
+  ellipse(player1x, player1y+10, 30,20); //smile
+  fill(#7C4E20);
+  ellipse(player1x, player1y+4, 55,20);
+  fill(#593B1D); //nostril shade
+  ellipse(player1x-7,player1y+5, 6,6);
+  ellipse(player1x+7,player1y+5, 6,6);
+  stroke(#67421D);
+  fill(#67421D);
+  triangle(player1x,player1y-10, player1x-7,player1y+5, player1x+7,player1y+5);
+  stroke(#311E0C);
+  line(player1x-13,player1y+9, player1x,player1y+8); //stache
+  line(player1x,player1y+8, player1x+13,player1y+9);
 }
 
 void player2() {
-  fill(green);
+  fill(#F2C7A0);
   strokeWeight(4);
-  stroke(255);
+  noStroke();
   circle(player2x,player2y,d);
 }
 
 void ball() {
-  fill(orange);
+  fill(#FA9B00);
   circle(ballx, bally, balld);
   
   ballx += vx;
@@ -90,19 +130,39 @@ void ball() {
     vy = 0;
     vx = 0;
     bally = height-balld/2;
-    score2 += 1;
+    score2 = score2M + 1;
+    pause += 1;
+    if (pause >= 150) {
+      ballx = 750;
+      bally = 200;
+      vx = 0;
+      vy = -2;
+      score1M = score1;
+      score2M = score2;
+      pause = 0;
+    }
   }
   
   if (bally >= height-balld/2 && ballx > width/2) { //right side point trigger
     vy = 0;
     vx = 0;
     bally = height-balld/2;
-    score1 += 1;
+    score1 = score1M + 1;
+    pause += 1;
+    if (pause >= 150) {
+      ballx = 250;
+      bally = 200;
+      vx = 0;
+      vy = -2;
+      score1M = score1;
+      score2M = score2;
+      pause = 0;
+    }
   }
 }
 
 void draw() {
-  background(red);
+  background(#81807F);
   player1();
   player2();
   ball();
