@@ -17,8 +17,8 @@ float player1x, player1y,  //position
 float player2x, player2y;
 
 // key variables
-boolean wkey,akey,skey,dkey; //false by default
-boolean upkey,leftkey,downkey,rightkey;
+boolean wkey,akey,dkey; //false by default
+boolean upkey,leftkey,rightkey;
 
 float sx = 480;
 float sy = 450;
@@ -31,6 +31,7 @@ int score1M;
 int score2;
 int score2M;
 
+PImage omni;
 
 void setup() {
   size(1000,800);
@@ -40,12 +41,13 @@ void setup() {
   balld = 50;
   vx = 0;
   vy = -0.5;
+
   player1x = 250;
   player1y = 700;
   d = 100;
   player2x = 750;
   player2y = 700;
-  
+  omni = loadImage("omni_face.png");
   ax = 0;
   ay = 0.1;
   
@@ -98,14 +100,17 @@ void player1() { //bron
 }
 
 void player2() {
-  fill(#F2C7A0);
-  strokeWeight(4);
-  noStroke();
-  circle(player2x,player2y,d);
+  stroke(#f2bfa0);
+  strokeWeight(22);
+  noFill();
+  image(omni,player2x-35,player2y-35, 70,70);
+  circle(player2x,player2y,d-22);
+
 }
 
 void ball() {
   fill(#FA9B00);
+  strokeWeight(4);
   circle(ballx, bally, balld);
   
   ballx += vx;
@@ -163,9 +168,13 @@ void ball() {
 
 void draw() {
   background(#81807F);
+  fill(0);
+  rect(-10,750, 1020,250);
   player1();
   player2();
   ball();
+  vx += ax;
+  vy += ay/2;
   strokeWeight(4);
   stroke(255);
   fill(255);
@@ -173,17 +182,15 @@ void draw() {
   text("score", 445,70);
   text(score1, 400,70);
   text(score2, 580, 70);
-  
-  vx += ax;
-  vy += ay/2;
-  if (wkey) player1y -= 2.5;
+
+  if (wkey && player1y == 750) {
+    
+  }
   if (akey) player1x -= 2.5;
-  if (skey) player1y += 2.5;
   if (dkey) player1x += 2.5;
   
   if (upkey) player2y -= 2.5;
   if (leftkey) player2x -= 2.5;
-  if (downkey) player2y += 2.5;
   if (rightkey) player2x += 2.5;
   
 
@@ -240,23 +247,19 @@ boolean ballnet(float cx, float cy, float r, float rx, float ry, float rw) {
 void keyPressed() {
   if (key == 'w') wkey = true;
   if (key == 'a') akey = true;
-  if (key == 's') skey = true;
   if (key == 'd') dkey = true;
   
   if (keyCode == UP) upkey = true;
   if (keyCode == LEFT) leftkey = true;
-  if (keyCode == DOWN) downkey = true;
   if (keyCode == RIGHT) rightkey = true;
 }
 
 void keyReleased() {
   if (key == 'w') wkey = false;
   if (key == 'a') akey = false;
-  if (key == 's') skey = false;
   if (key == 'd') dkey = false;
   
   if (keyCode == UP) upkey = false;
   if (keyCode == LEFT) leftkey = false;
-  if (keyCode == DOWN) downkey = false;
   if (keyCode == RIGHT) rightkey = false;
 }
