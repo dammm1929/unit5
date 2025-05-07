@@ -6,9 +6,17 @@ color cyan = #9BF6FF;
 color blue = #A0C4FF;
 color purp = #BDB2FF;
 
+int mode;
+final int INTRO = 0;
+final int GAME = 1;
+final int PAUSE = 2;
+final int GAMEOVER = 3;
+
+
 float ballx, bally, balld;
 float vx, vy;
 float ax, ay;
+float vy1, vy2;
 
 // target
 float player1x, player1y,  //position
@@ -36,20 +44,23 @@ PImage omni;
 void setup() {
   size(1000,800);
   frameRate(120);
+  mode = GAME;
   ballx = 250;
   bally = 200;
   balld = 50;
   vx = 0;
   vy = -0.5;
+  vy1 = 0;
+  vy2 = 0;
 
+  d = 100;
   player1x = 250;
   player1y = 700;
-  d = 100;
   player2x = 750;
   player2y = 700;
   omni = loadImage("omni_face.png");
   ax = 0;
-  ay = 0.1;
+  ay = 0.1; //strength of gravity
   
   score1M = score1;
   score2M = score2;
@@ -131,10 +142,10 @@ void ball() {
     ballx = width - balld/2;
   }
   
-  if (bally >= height-balld/2 && ballx < width/2) { //left side point trigger
+  if (bally >= 750-balld/2 && ballx < width/2) { //left side point trigger
     vy = 0;
     vx = 0;
-    bally = height-balld/2;
+    bally = 750-balld/2;
     score2 = score2M + 1;
     pause += 1;
     if (pause >= 150) {
@@ -145,13 +156,17 @@ void ball() {
       score1M = score1;
       score2M = score2;
       pause = 0;
+      player1x = 250;
+      player1y = 700;
+      player2x = 750;
+      player2y = 700;
     }
   }
   
-  if (bally >= height-balld/2 && ballx > width/2) { //right side point trigger
+  if (bally >= 750-balld/2 && ballx > width/2) { //right side point trigger
     vy = 0;
     vx = 0;
-    bally = height-balld/2;
+    bally = 750-balld/2;
     score1 = score1M + 1;
     pause += 1;
     if (pause >= 150) {
@@ -162,11 +177,28 @@ void ball() {
       score1M = score1;
       score2M = score2;
       pause = 0;
+      player1x = 250;
+      player1y = 700;
+      player2x = 750;
+      player2y = 700;
     }
   }
 }
 
 void draw() {
+  
+  if (mode == INTRO) {
+    intro();
+  } else if (mode == GAME) {
+    game();
+  } else if (mode == PAUSE) {
+    pause();
+  } else if (mode == GAMEOVER) {
+    gameover();
+  } else {
+    println("error mode = " + mode);
+  }
+  
   background(#81807F);
   fill(0);
   rect(-10,750, 1020,250);
@@ -174,7 +206,9 @@ void draw() {
   player2();
   ball();
   vx += ax;
-  vy += ay/2;
+  vy += ay; //how hard characters hit the ball
+
+  
   strokeWeight(4);
   stroke(255);
   fill(255);
@@ -182,25 +216,47 @@ void draw() {
   text("score", 445,70);
   text(score1, 400,70);
   text(score2, 580, 70);
-
-  if (wkey && player1y == 750) {
-    
+  
+  
+  if (player1y < 700) { //player 1 movement (jump)
+    vy1 += ay;
+    player1y += vy1;
   }
-  if (akey) player1x -= 2.5;
-  if (dkey) player1x += 2.5;
+  if (player1y > 700) {
+    player1y = 700;
+  }
+  if (wkey && player1y == 700) {
+    vy1 = -5;
+    player1y -= 1;
+  }
+  if (akey && player1x > 50) player1x -= 2.5;
+  if (dkey && player1x < 430) player1x += 2.5;
   
-  if (upkey) player2y -= 2.5;
-  if (leftkey) player2x -= 2.5;
-  if (rightkey) player2x += 2.5;
+  
+  
+  if (player2y < 700) { //player 2 movement (jump)
+    vy2 += ay;
+    player2y += vy2;
+  }
+  if (player2y > 700) {
+    player2y = 700;
+  }
+  if (upkey && player2y == 700) {
+    vy2 = -5;
+    player2y -= 1;
+  }
+  
+  if (leftkey && player2x > 570) player2x -= 2.5;
+  if (rightkey && player2x < 950) player2x += 2.5;
   
 
-  if (dist(player1x, player1y, ballx, bally) <= d/2 + balld/2) {
+  if (dist(player1x, player1y, ballx, bally) <= d/2 + balld/2 && bally <= 720) {
     vx = (ballx - player1x)/20;
     vy = (bally - player1y)/10;
 
   }
   
-  if (dist(player2x, player2y, ballx, bally) <= d/2 + balld/2) {
+  if (dist(player2x, player2y, ballx, bally) <= d/2 + balld/2 && bally <= 720) {
     vx = (ballx - player2x)/20;
     vy = (bally - player2y)/10;
   }
@@ -219,7 +275,7 @@ void draw() {
     vy *= -0.99;
   }
   fill(#A7A7A7);
-  rect(sx, sy, sw, sh);
+  rect(sx, sy, sw, sh-50);
     
     
   
