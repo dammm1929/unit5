@@ -17,6 +17,10 @@ float ballx, bally, balld;
 float vx, vy;
 float ax, ay;
 float vy1, vy2;
+float vx1, vx2;
+float vx1p2, vx2p2;
+
+float cooldown = 0;
 
 // target
 float player1x, player1y,  //position
@@ -27,6 +31,7 @@ float player2x, player2y;
 // key variables
 boolean wkey,akey,dkey; //false by default
 boolean upkey,leftkey,rightkey;
+boolean dash;
 
 float sx = 480;
 float sy = 450;
@@ -52,6 +57,8 @@ void setup() {
   vy = -0.5;
   vy1 = 0;
   vy2 = 0;
+  vx1 = vx2 = 0.1;
+  vx1p2 = vx2p2 = 0.1;
 
   d = 100;
   player1x = 250;
@@ -186,7 +193,6 @@ void ball() {
 }
 
 void draw() {
-  
   if (mode == INTRO) {
     intro();
   } else if (mode == GAME) {
@@ -229,11 +235,24 @@ void draw() {
     vy1 = -5;
     player1y -= 1;
   }
-  if (akey && player1x > 50) player1x -= 2.5;
-  if (dkey && player1x < 430) player1x += 2.5;
   
+  if (akey && player1x > 50) {
+    player1x -= vx1;
+    if (vx1 <= 2.5) vx1 *= 1.06;
+  }
+  else {
+    //if (vx1 > 0) vx1 -= 0.1;
+    vx1 = 0.2;
+  }
   
-  
+  if (dkey && player1x < 430) {
+    player1x += vx2;
+    if (vx2 <= 2.5) vx2 *= 1.06;
+  }
+  else {
+    vx2 = 0.2;
+  }
+
   if (player2y < 700) { //player 2 movement (jump)
     vy2 += ay;
     player2y += vy2;
@@ -246,11 +265,30 @@ void draw() {
     player2y -= 1;
   }
   
-  if (leftkey && player2x > 570) player2x -= 2.5;
-  if (rightkey && player2x < 950) player2x += 2.5;
+  if (leftkey && player2x > 570) {
+    player2x -= vx1p2;
+    if (vx1p2 <= 2.5) vx1p2 *= 1.06;
+  }
+  else {
+    vx1p2 = 0.2;
+  }
+    
+  if (rightkey && player2x < 950) {
+    player2x += vx2p2;
+    if (vx2p2 <= 2.5) vx2p2 *= 1.06;
+  }
+  else {
+    vx2p2 = 0.2;
+  }
   
 
-  if (dist(player1x, player1y, ballx, bally) <= d/2 + balld/2 && bally <= 720) {
+  
+  //DASHING
+  //if (dash && leftkey) player1x -= 30;
+ 
+  
+
+  if (dist(player1x, player1y, ballx, bally) <= d/2 + balld/2 && bally <= 720) { //collision on ball
     vx = (ballx - player1x)/20;
     vy = (bally - player1y)/10;
 
@@ -308,6 +346,8 @@ void keyPressed() {
   if (keyCode == UP) upkey = true;
   if (keyCode == LEFT) leftkey = true;
   if (keyCode == RIGHT) rightkey = true;
+  
+  if (keyCode == SHIFT) dash = true;
 }
 
 void keyReleased() {
@@ -318,4 +358,6 @@ void keyReleased() {
   if (keyCode == UP) upkey = false;
   if (keyCode == LEFT) leftkey = false;
   if (keyCode == RIGHT) rightkey = false;
+  
+  //if (keyCode == SHIFT) dash = false;
 }
