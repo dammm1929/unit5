@@ -50,7 +50,7 @@ void setup() {
   size(1000,800);
   frameRate(120);
   mode = GAME;
-  ballx = 250;
+  ballx = 750;
   bally = 200;
   balld = 50;
   vx = 0;
@@ -231,18 +231,19 @@ void draw() {
   if (player1y > 700) {
     player1y = 700;
   }
-  if (wkey && player1y == 700) {
+  
+  if (wkey && player1y == 700) { //left and right
     vy1 = -5;
     player1y -= 1;
   }
   
-  if (akey && player1x > 50) {
+  if (akey && player1x > 50) { // vx1 = 0.1 btw
     player1x -= vx1;
     if (vx1 <= 2.5) vx1 *= 1.06;
   }
   else {
     //if (vx1 > 0) vx1 -= 0.1;
-    vx1 = 0.2;
+    vx1 = 0.3;
   }
   
   if (dkey && player1x < 430) {
@@ -250,8 +251,24 @@ void draw() {
     if (vx2 <= 2.5) vx2 *= 1.06;
   }
   else {
-    vx2 = 0.2;
+    vx2 = 0.3;
   }
+  
+  //DASHING
+  if (vx1 > 2.5) {
+    vx1 -= 0.8;
+  }
+  if (vx2 > 2.5) {
+    vx2 -= 0.8;
+  }
+  if (vx1p2 > 2.5) {
+    vx1p2 -= 0.8;
+  }
+  if (vx2p2 > 2.5) {
+    vx2p2 -= 0.8;
+  }
+
+
 
   if (player2y < 700) { //player 2 movement (jump)
     vy2 += ay;
@@ -280,12 +297,6 @@ void draw() {
   else {
     vx2p2 = 0.2;
   }
-  
-
-  
-  //DASHING
-  //if (dash && leftkey) player1x -= 30;
- 
   
 
   if (dist(player1x, player1y, ballx, bally) <= d/2 + balld/2 && bally <= 720) { //collision on ball
@@ -343,11 +354,21 @@ void keyPressed() {
   if (key == 'a') akey = true;
   if (key == 'd') dkey = true;
   
-  if (keyCode == UP) upkey = true;
-  if (keyCode == LEFT) leftkey = true;
-  if (keyCode == RIGHT) rightkey = true;
+  if (key == 'i') upkey = true;
+  if (key == 'j') leftkey = true;
+  if (key == 'l') rightkey = true;
   
-  if (keyCode == SHIFT) dash = true;
+  if (keyCode == SHIFT) {
+    if(akey) vx1 += 10;
+    if(dkey) vx2 += 10;
+  }
+  
+  if (key == ' ') {
+    if(leftkey) vx1p2 += 10;
+    if(rightkey) vx2p2 += 10;
+  }
+  
+  
 }
 
 void keyReleased() {
@@ -355,9 +376,9 @@ void keyReleased() {
   if (key == 'a') akey = false;
   if (key == 'd') dkey = false;
   
-  if (keyCode == UP) upkey = false;
-  if (keyCode == LEFT) leftkey = false;
-  if (keyCode == RIGHT) rightkey = false;
+  if (key == 'i') upkey = false;
+  if (key == 'j') leftkey = false;
+  if (key == 'l') rightkey = false;
   
   //if (keyCode == SHIFT) dash = false;
 }
