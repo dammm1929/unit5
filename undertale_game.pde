@@ -42,10 +42,12 @@ int r4;
 
 // game specific variables
 int option;
-final int FIGHT = 0;
-final int ACT = 1;
-final int ITEM = 2;
-final int MERCY = 3;
+final int FIGHT = 1;
+final int ACT = 2;
+final int ITEM = 3;
+final int MERCY = 4;
+
+boolean MENU = true;
 boolean BATTLE = false;
 float heartX = 48;
 float heartY = 713;
@@ -95,8 +97,10 @@ void draw() {
   stroke(#FF8808);
   strokeWeight(4);
   fill(#000000); //option boxes
+  textFont(retro);
   
-  if (heartX == 48) {
+  
+  if (heartX == 48) { //outline
     stroke(#FFE600);
   } else {
     stroke(#FF8808);
@@ -123,22 +127,39 @@ void draw() {
     stroke(#FF8808);
   }
   rect(630,680, 140,55);
-
-
-
   
-  textFont(retro); //actions
-  fill(#FF8808);
+  
+  
+  
+  if (heartX == 48) { //text
+    fill(#FFE600);
+  } else {
+    fill(#FF8808);
+  }
   text("FIGHT", 63,720);
+
+  if (heartX == 248) {
+    fill(#FFE600);
+  } else {
+    fill(#FF8808);
+  }
   text("ACT", 290,720);
+
+  if (heartX == 448) {
+    fill(#FFE600);
+  } else {
+    fill(#FF8808);
+  }
   text("ITEM", 475,720);
+
+  if (heartX == 648) {
+    fill(#FFE600);
+  } else {
+    fill(#FF8808);
+  }
   text("MERCY", 650,720);
   
-  fill(#F70202); //heart
-  stroke(#F70202);
-  triangle(heartX,heartY, heartX+6,heartY-7, heartX-6,heartY-7);
-  ellipse(heartX-3,heartY-9, 6.1,7.5);
-  ellipse(heartX+4.2,heartY-9, 6.1,7.5);
+  heart();
   
   stroke(#FFFFFF); //white box
   fill(#000000);
@@ -167,59 +188,59 @@ void draw() {
 
 
 //attack bar bars
-  stroke(#F50A0A); //red
-  fill(#F50A0A);
-  rect(120,500,13,80);
-  rect(667,500,13,80);
+  //stroke(#F50A0A); //red
+  //fill(#F50A0A);
+  //rect(120,500,13,80);
+  //rect(667,500,13,80);
   
-  stroke(#E9FF00); //yellow
-  fill(#E9FF00);
-  rect(250,480,13,120);
-  rect(537,480,13,120);
+  //stroke(#E9FF00); //yellow
+  //fill(#E9FF00);
+  //rect(250,480,13,120);
+  //rect(537,480,13,120);
   
-  rect(350,477, 100,126);
+  //rect(350,477, 100,126);
   
-  stroke(#50C100); //green
-  fill(#50C100);
-  rect(355,480, 25,120);
-  rect(420,480, 25,120);
+  //stroke(#50C100); //green
+  //fill(#50C100);
+  //rect(355,480, 25,120);
+  //rect(420,480, 25,120);
   
-  stroke(0); //black
-  fill(0);
-  rect(380,480, 40,120);
+  //stroke(0); //black
+  //fill(0);
+  //rect(380,480, 40,120);
   
-  stroke(#E9FF00); //attack bar oval
-  fill(#E9FF00);
-  strokeWeight(5);
-  noFill();
-  ellipse(400,540, 700,120);
-  stroke(0);
-  strokeWeight(8);
-  ellipse(400,540, 713,132);
+  //stroke(#E9FF00); //attack bar oval
+  //fill(#E9FF00);
+  //strokeWeight(5);
+  //noFill();
+  //ellipse(400,540, 700,120);
+  //stroke(0);
+  //strokeWeight(8);
+  //ellipse(400,540, 713,132);
   
-  stroke(#E9FF00); //little lines and details
-  fill(#E9FF00);
-  strokeWeight(3);
-  line(250,470, 550,470);
-  line(250,610, 550,610);
+  //stroke(#E9FF00); //little lines and details
+  //fill(#E9FF00);
+  //strokeWeight(3);
+  //line(250,470, 550,470);
+  //line(250,610, 550,610);
   
-  fill(0);
-  stroke(0);
-  rect(268,465, 15,5);
-  rect(513,465, 15,5);
-  rect(513,605, 15,5);
-  rect(268,605, 15,5);
+  //fill(0);
+  //stroke(0);
+  //rect(268,465, 15,5);
+  //rect(513,465, 15,5);
+  //rect(513,605, 15,5);
+  //rect(268,605, 15,5);
   
-  stroke(#F50A0A);
-  line(160,520, 220,520);
-  line(160,550, 220,550);
-  line(640,520, 580,520);
-  line(640,550, 580,550);
-  stroke(#E9FF00);
-  line(280,515, 330,515);
-  line(280,555, 330,555);
-  line(470,555, 520,555);
-  line(470,515, 520,515);
+  //stroke(#F50A0A);
+  //line(160,520, 220,520);
+  //line(160,550, 220,550);
+  //line(640,520, 580,520);
+  //line(640,550, 580,550);
+  //stroke(#E9FF00);
+  //line(280,515, 330,515);
+  //line(280,555, 330,555);
+  //line(470,555, 520,555);
+  //line(470,515, 520,515);
   
   
   //froggit
@@ -459,9 +480,42 @@ void draw() {
     bbox = 10;
     
   }
-    
+  
+  
+  if (option == FIGHT) {
+    frogselect();
+  }
+  
+  
+  
+  
+  
+  
+//float heartX = 48;
+//float heartY = 713;
 
 }
+
+void heart() {
+  fill(#F70202);
+  stroke(#F70202);
+  triangle(heartX,heartY, heartX+6,heartY-7, heartX-6,heartY-7);
+  ellipse(heartX-3,heartY-9, 6.1,7.5);
+  ellipse(heartX+4.2,heartY-9, 6.1,7.5);
+}
+
+
+void frogselect() {
+    heartX = 60;
+    heartY = 500;
+    heart();
+    textSize(50);
+    fill(255);
+    text("* Froggit", 120, 500);
+  
+}
+
+
 
 void keyPressed() {
 //  if (key == ' ') {
@@ -470,15 +524,28 @@ void keyPressed() {
 //    }
     
     
+  if (MENU == true) {
+    if (keyCode == RIGHT && heartX <= 630) {
+      heartX += 200;
+    }
+    if (keyCode == LEFT && heartX >= 230) {
+      heartX -= 200;
+    }
   
-  if (keyCode == RIGHT && heartX <= 630) {
-    heartX += 200;
-    //stroke(#FFE600);
+    if (key == ' ' && heartX == 48) {
+      option = FIGHT;
+    }
+    if (key == ' ' && heartX == 248) {
+      option = ACT;
+    }
+    if (key == ' ' && heartX == 448) {
+      option = ITEM;
+    }
+    if (key == ' ' && heartX == 648) {
+      option = MERCY;
+    }
   }
-  
-  if (keyCode == LEFT && heartX >= 30) {
-    heartX -= 200;
-  }
+
   
 //  if (keyCode == UP) {
     
