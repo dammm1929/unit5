@@ -39,6 +39,7 @@ int r2;
 int r3;
 int tru;
 int r4;
+float starttext = -700;
 
 // game specific variables
 int option;
@@ -49,6 +50,7 @@ final int MERCY = 4;
 
 boolean MENU = true;
 boolean BATTLE = false;
+boolean startswing = false;
 float heartX = 48;
 float heartY = 713;
 
@@ -66,7 +68,7 @@ void setup() {
   text = minimtools.loadFile("textsound.mp3");
   song.play();
   retro = createFont("Eight-Bit Madness.ttf", 45);
-  barX = -500;
+  barX = -100;
   barY = 465;
   counter = 1;
   black = 0;
@@ -158,8 +160,7 @@ void draw() {
     fill(#FF8808);
   }
   text("MERCY", 650,720);
-  
-  heart();
+
   
   stroke(#FFFFFF); //white box
   fill(#000000);
@@ -186,62 +187,65 @@ void draw() {
   fill(#FFF700);
   rect(360,638,32,25);
 
+  heart(heartX,heartY);
 
+
+  if (startswing) {
 //attack bar bars
-  //stroke(#F50A0A); //red
-  //fill(#F50A0A);
-  //rect(120,500,13,80);
-  //rect(667,500,13,80);
+  stroke(#F50A0A); //red
+  fill(#F50A0A);
+  rect(120,500,13,80);
+  rect(667,500,13,80);
   
-  //stroke(#E9FF00); //yellow
-  //fill(#E9FF00);
-  //rect(250,480,13,120);
-  //rect(537,480,13,120);
+  stroke(#E9FF00); //yellow
+  fill(#E9FF00);
+  rect(250,480,13,120);
+  rect(537,480,13,120);
   
-  //rect(350,477, 100,126);
+  rect(350,477, 100,126);
   
-  //stroke(#50C100); //green
-  //fill(#50C100);
-  //rect(355,480, 25,120);
-  //rect(420,480, 25,120);
+  stroke(#50C100); //green
+  fill(#50C100);
+  rect(355,480, 25,120);
+  rect(420,480, 25,120);
   
-  //stroke(0); //black
-  //fill(0);
-  //rect(380,480, 40,120);
+  stroke(0); //black
+  fill(0);
+  rect(380,480, 40,120);
   
-  //stroke(#E9FF00); //attack bar oval
-  //fill(#E9FF00);
-  //strokeWeight(5);
-  //noFill();
-  //ellipse(400,540, 700,120);
-  //stroke(0);
-  //strokeWeight(8);
-  //ellipse(400,540, 713,132);
+  stroke(#E9FF00); //attack bar oval
+  fill(#E9FF00);
+  strokeWeight(5);
+  noFill();
+  ellipse(400,540, 700,120);
+  stroke(0);
+  strokeWeight(8);
+  ellipse(400,540, 713,132);
   
-  //stroke(#E9FF00); //little lines and details
-  //fill(#E9FF00);
-  //strokeWeight(3);
-  //line(250,470, 550,470);
-  //line(250,610, 550,610);
+  stroke(#E9FF00); //little lines and details
+  fill(#E9FF00);
+  strokeWeight(3);
+  line(250,470, 550,470);
+  line(250,610, 550,610);
   
-  //fill(0);
-  //stroke(0);
-  //rect(268,465, 15,5);
-  //rect(513,465, 15,5);
-  //rect(513,605, 15,5);
-  //rect(268,605, 15,5);
+  fill(0);
+  stroke(0);
+  rect(268,465, 15,5);
+  rect(513,465, 15,5);
+  rect(513,605, 15,5);
+  rect(268,605, 15,5);
   
-  //stroke(#F50A0A);
-  //line(160,520, 220,520);
-  //line(160,550, 220,550);
-  //line(640,520, 580,520);
-  //line(640,550, 580,550);
-  //stroke(#E9FF00);
-  //line(280,515, 330,515);
-  //line(280,555, 330,555);
-  //line(470,555, 520,555);
-  //line(470,515, 520,515);
-  
+  stroke(#F50A0A);
+  line(160,520, 220,520);
+  line(160,550, 220,550);
+  line(640,520, 580,520);
+  line(640,550, 580,550);
+  stroke(#E9FF00);
+  line(280,515, 330,515);
+  line(280,555, 330,555);
+  line(470,555, 520,555);
+  line(470,515, 520,515);
+  }
   
   //froggit
   image(img, fx,150, 200,200);
@@ -273,7 +277,9 @@ void draw() {
   
 
   rect(barX,barY, 15,150);
-  //barX += 10; //start
+  if (startswing) {
+    barX += 10;
+  }
   
   if (barX > 395) {
     barX = 395;
@@ -463,6 +469,18 @@ void draw() {
     rect(30,460,740,160);
   }
 
+  if (MENU) {
+    fill(255);
+    text("* Froggit hopped close!", 70,525);
+    stroke(0);
+    fill(0);
+    rect(765,490, starttext,70);
+    starttext += 8;
+    stroke(#FFFFFF); //white box again to not get overlapped
+    noFill();
+    strokeWeight(5);
+    rect(30,460,740,160);
+  }
   
 //loop
   if (reset == 140 && stop == 0) {
@@ -482,36 +500,44 @@ void draw() {
   }
   
   
-  if (option == FIGHT) {
+  if (option == FIGHT && startswing == false) {
+    frogselect();
+  } else if (startswing == true) {
+    hideheart();
+  }
+  
+  if (option == ACT) {
     frogselect();
   }
   
+  if (option == MERCY) {
+    frogselect();
+    
+  }
   
   
-  
-  
-  
-//float heartX = 48;
-//float heartY = 713;
-
 }
 
-void heart() {
+void heart(float x, float y) {
+  pushMatrix();
+  translate(x, y);
   fill(#F70202);
   stroke(#F70202);
-  triangle(heartX,heartY, heartX+6,heartY-7, heartX-6,heartY-7);
-  ellipse(heartX-3,heartY-9, 6.1,7.5);
-  ellipse(heartX+4.2,heartY-9, 6.1,7.5);
+  strokeWeight(2);
+  triangle(0,0, 6,-7, -6,-7);
+  ellipse(-3,-9, 6.1,7.5);
+  ellipse(4.2,-9, 6.1,7.5);
+  popMatrix();
 }
 
 
 void frogselect() {
-    heartX = 60;
-    heartY = 500;
-    heart();
-    textSize(50);
-    fill(255);
-    text("* Froggit", 120, 500);
+  MENU = false;
+  heartX = 67;
+  heartY = 510;
+  textSize(50);
+  fill(255);
+  text("* Froggit", 105, 515);
   
 }
 
@@ -544,7 +570,17 @@ void keyPressed() {
     if (key == ' ' && heartX == 648) {
       option = MERCY;
     }
+    
   }
+  
+  if (MENU == false) {
+    if (option == FIGHT && key == ' ') {
+      startswing = true;
+        
+        
+    }
+  }
+
 
   
 //  if (keyCode == UP) {
@@ -554,4 +590,9 @@ void keyPressed() {
 //  if (keyCode == DOWN) {
     
 //  }
+}
+
+void hideheart() {
+  heartX = 2000;
+  heartY = 2000;
 }
