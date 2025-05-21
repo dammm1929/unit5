@@ -53,7 +53,10 @@ boolean BATTLE = false;
 boolean startswing = false;
 float heartX = 48;
 float heartY = 713;
-
+boolean spared = false;
+boolean acting = false;
+boolean checkdialogue = false;
+boolean talkdialogue = false;
 
 
 
@@ -482,22 +485,46 @@ void draw() {
     rect(30,460,740,160);
   }
   
-//loop
-  if (reset == 140 && stop == 0) {
-    barX = -500;
-    counter = 1;
-    black = 0;
-    white = 255;
-    flashes = 0;
-    barY = 465;
-    attackframe = 0;
-    //health = 180;
-    textheight = 90;
-    textspeed = 5;
-    reset = 0;
-    bbox = 10;
+  if (spared) {
+    fill(#FCE800);
+    textSize(50);
+    text("spared", 330,400);
     
   }
+  
+  
+  
+  
+  if (checkdialogue) {
+    fill(255);
+    //text("* FROGGIT - ATK 4 DEF 5", 70,525);
+    //starttext = -700;
+  }
+  
+  if (talkdialogue) {
+    fill(255);
+    text("* Froggit didn't understand what you said", 60, 525);
+    
+  }
+  
+  
+  
+//loop
+  //if (reset == 140 && stop == 0) {
+  //  barX = -500;
+  //  counter = 1;
+  //  black = 0;
+  //  white = 255;
+  //  flashes = 0;
+  //  barY = 465;
+  //  attackframe = 0;
+  //  //health = 180;
+  //  textheight = 90;
+  //  textspeed = 5;
+  //  reset = 0;
+  //  bbox = 10;
+    
+  //}
   
   
   if (option == FIGHT && startswing == false) {
@@ -506,12 +533,18 @@ void draw() {
     hideheart();
   }
   
-  if (option == ACT) {
+  if (option == ACT && acting == false) {
     frogselect();
   }
   
   if (option == MERCY) {
     frogselect();
+    
+  }
+  
+  
+  if (acting) {
+    actoptions();
     
   }
   
@@ -542,6 +575,14 @@ void frogselect() {
 }
 
 
+void actoptions() {
+  fill(255);
+  textSize(50);
+  text("Check", 105, 515);
+  text("Talk", 405, 515);
+  
+}
+
 
 void keyPressed() {
 //  if (key == ' ') {
@@ -558,28 +599,93 @@ void keyPressed() {
       heartX -= 200;
     }
   
-    if (key == ' ' && heartX == 48) {
+    if (key == 'z' && heartX == 48) {
       option = FIGHT;
     }
-    if (key == ' ' && heartX == 248) {
+    if (key == 'z' && heartX == 248) {
       option = ACT;
     }
-    if (key == ' ' && heartX == 448) {
+    if (key == 'z' && heartX == 448) {
       option = ITEM;
     }
-    if (key == ' ' && heartX == 648) {
+    if (key == 'z' && heartX == 648) {
       option = MERCY;
     }
     
   }
   
+  
+  
+  
+  
   if (MENU == false) {
-    if (option == FIGHT && key == ' ') {
-      startswing = true;
-        
-        
+    if (option == FIGHT) {
+      if (key == 'z') {
+        startswing = true;
+      }
+      if (key == 'x' && startswing == false) {
+        option = 0;
+        MENU = true;
+        heartX = 48;
+        heartY = 713;
+        starttext = -700;
+      }
     }
+    
+    if (option == ACT) {
+      if (key == 'z' && acting == false) { //if we go past frog select
+        acting = true;
+      }
+      if (key == 'x') {
+        option = 0;
+        MENU = true;
+        acting = false;
+        heartX = 248;
+        heartY = 713;
+        starttext = -700;
+      }
+      
+      
+      if (acting) {
+        
+        if (keyCode == RIGHT && heartX < 200) { //over talk
+          heartX += 300;
+        }
+        if (keyCode == LEFT && heartX > 200) { //over check
+          heartX -= 300;
+        }
+        
+        if (key == 'z' && heartX == 67 && acting == true) { //triggering this at the same time issue
+          checkdialogue = true;
+          //hideheart();
+        }
+        
+        if (key == 'z' && heartX == 367 && acting == true) {
+          talkdialogue = true;
+          hideheart();
+        }
+        
+      }
+          
+    }
+    
+      
+    if (option == MERCY) {
+      if (key == 'z') {
+        spared = true;
+      }
+      if (key == 'x') {
+        option = 0;
+        MENU = true;
+        heartX = 648;
+        heartY = 713;
+        starttext = -700;
+      }
+    }
+    
   }
+  
+  
 
 
   
