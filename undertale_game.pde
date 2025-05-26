@@ -26,7 +26,7 @@ int barY;
 int attackframe;
 int health;
 int reset;
-int textheight;
+int dmgheight;
 int textspeed;
 PImage img;
 int fx;
@@ -59,6 +59,7 @@ boolean checkdialogue = false;
 boolean talkdialogue = false;
 boolean proceed = false;
 boolean miss = false;
+int missheight = 400;
 
 
 
@@ -82,7 +83,7 @@ void setup() {
   attackframe = 0;
   health = 180;
   reset = 0;
-  textheight = 90;
+  dmgheight = 90;
   textspeed = 5;
   fx = 300;
   ow = 0;
@@ -285,13 +286,28 @@ void draw() {
   }
 
   if (barX > 750) {
-    startswing = false;
+    //startswing = false;
     miss = true;
-    barX = -100;
+    barX = 1000;
 
 
     if (miss == true) {
-      text("Miss", 400, 500);
+      fill(#CBCBCB);
+      textSize(60);
+      text("Miss", 350, missheight);
+      if (missheight <= 400 && missheight >= 380) {
+        missheight -= 5;
+      }
+      if (missheight <= 375 && missheight >= 361) {
+        missheight -= 2;
+      }
+      else if (missheight >= 361 && missheight <= 380) {
+        missheight += 2;
+      }
+      else if (missheight >= 380 && missheight >= 400) {
+        missheight += 5;
+      }
+      
     }
 
 
@@ -390,14 +406,14 @@ void draw() {
   if (attackframe > 60 && attackframe <= 200) {
     fill(#D33131);
     textSize(60);
-    text("21", 375, textheight);
-    textheight -= textspeed;
+    text("21", 375, dmgheight);
+    dmgheight -= textspeed;
   }
   if (attackframe > 60 && attackframe <= 72) {
     textspeed -= 1;
   }
   if (textspeed == -7) {
-    textheight = 90;
+    dmgheight = 90;
   }
 
 
