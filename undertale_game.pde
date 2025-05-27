@@ -50,7 +50,9 @@ final int MERCY = 4;
 
 boolean MENU = true;
 boolean BATTLE = false;
-boolean startswing = false;
+boolean fightbar = false;
+boolean bargo = false;
+boolean hit = false;
 float heartX = 48;
 float heartY = 713;
 boolean spared = false;
@@ -59,7 +61,8 @@ boolean checkdialogue = false;
 boolean talkdialogue = false;
 boolean proceed = false;
 boolean miss = false;
-int missheight = 400;
+int missheight = 380;
+int k = 0;
 
 
 
@@ -194,7 +197,7 @@ void draw() {
   heart(heartX, heartY);
 
 
-  if (startswing) {
+  if (fightbar) {
     //attack bar bars
     stroke(#F50A0A); //red
     fill(#F50A0A);
@@ -272,48 +275,71 @@ void draw() {
     ow = 0;
     fx = 300;
   }
-
+  
+  if (attackframe == 200) { //reset
+    barX = -100;
+    barY = 465;
+    fightbar = false;
+    option = 0;
+    heartX = 48;
+    heartY = 713;
+    MENU = true;
+    //hit = false;
+  }
 
   //timing bar
   fill(white);
   stroke(black);
   strokeWeight(5);
-
-
   rect(barX, barY, 15, 150);
-  if (startswing) {
+  
+  if (bargo) {
     barX += 10;
   }
 
   if (barX > 750) {
-    //startswing = false;
     miss = true;
     barX = 1000;
+    bargo = false;
 
 
     if (miss == true) {
+      k += 1;
       fill(#CBCBCB);
       textSize(60);
       text("Miss", 350, missheight);
-      if (missheight <= 400 && missheight >= 380) {
-        missheight -= 5;
+      if (k <= 7 && k >= 0) {
+        missheight -= 3;
       }
-      if (missheight <= 375 && missheight >= 361) {
-        missheight -= 2;
+      if (k > 7 && k<=15) {
+        missheight -= 1;
       }
-      else if (missheight >= 361 && missheight <= 380) {
-        missheight += 2;
+      if (k > 15 && k <=25) {
+        missheight += 1;
       }
-      else if (missheight >= 380 && missheight >= 400) {
-        missheight += 5;
+      if (k > 25 && k <= 35) {
+        missheight += 3;
+      }  
+      if (k == 70) {
+        barX = -100;
+        miss = false;
+        fightbar = false;
+        option = 0;
+        heartX = 48;
+        heartY = 713;
+        k = 0;
+        MENU = true;
       }
       
     }
+    
 
+  }
+  
+  if (hit == true) {
+    counter += 1;
+    attackframe += 1;
 
-
-    //counter += 1;
-    //attackframe += 1;
   }
 
   if (counter <= 7) {
@@ -338,10 +364,7 @@ void draw() {
   //slash
   stroke(#F27188);
   fill(#F27188);
-  if (barX == 300) {
-    slash.play();
-    slash.rewind();
-  }
+
   if (attackframe == 1 || attackframe == 2 || attackframe == 3) {
     rect(400, 140, 2, 8);
   }
@@ -569,9 +592,9 @@ void draw() {
   //}
 
 
-  if (option == FIGHT && startswing == false) {
+  if (option == FIGHT && fightbar == false) {
     frogselect();
-  } else if (startswing == true) {
+  } else if (fightbar == true) {
     hideheart();
   }
 
@@ -655,17 +678,32 @@ void keyPressed() {
 
   if (MENU == false) {
     if (option == FIGHT) {
-      if (key == 'z') {
-        startswing = true;
+      if (key == 'z' && bargo == false) {
+        barX = -100;
+        barY = 465;
+        fightbar = true;
+        bargo = true;
       }
-      if (key == 'x' && startswing == false) {
+      
+      else if (bargo == true && key == 'z' && fightbar == true) {
+        bargo = false;
+        hit = true;
+        slash.play();
+        slash.rewind();
+      }
+      
+      
+      else if (key == 'x' && fightbar == false) {
         option = 0;
         MENU = true;
         heartX = 48;
         heartY = 713;
         starttext = -700;
       }
+      
     }
+    
+    
 
 
     if (option == ACT) {
@@ -716,8 +754,6 @@ void keyPressed() {
 
 
 
-    if (startswing == true) {
-    }
   } //end of if MENU = false
 
   if (proceed == true) {
