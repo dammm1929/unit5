@@ -39,7 +39,6 @@ int r2;
 int r3;
 int tru;
 int r4;
-float starttext = -700;
 
 // game specific variables
 int option;
@@ -48,6 +47,7 @@ final int ACT = 2;
 final int ITEM = 3;
 final int MERCY = 4;
 
+float starttext = -700;
 boolean MENU = true;
 boolean BATTLE = false;
 boolean fightbar = false;
@@ -63,6 +63,7 @@ boolean proceed = false;
 boolean miss = false;
 int missheight = 380;
 int k = 0;
+int dmgtaken;
 
 
 
@@ -276,7 +277,7 @@ void draw() {
     fx = 300;
   }
   
-  if (attackframe == 200) { //reset
+  if (attackframe == 200 && health > 0) { //reset
     barX = -100;
     barY = 465;
     fightbar = false;
@@ -284,7 +285,9 @@ void draw() {
     heartX = 48;
     heartY = 713;
     MENU = true;
-    //hit = false;
+    starttext = -700;
+    flashes = 0;
+
   }
 
   //timing bar
@@ -329,6 +332,7 @@ void draw() {
         heartY = 713;
         k = 0;
         MENU = true;
+        starttext = -700;
       }
       
     }
@@ -429,9 +433,31 @@ void draw() {
   if (attackframe > 60 && attackframe <= 200) {
     fill(#D33131);
     textSize(60);
-    text("21", 375, dmgheight);
+    
+    // rect(250, 480, 13, 120); //yellow
+    // rect(537, 480, 13, 120);
+    
+    //rect(355, 480, 25, 120); //green
+    //rect(420, 480, 25, 120);
+    
+    if ((barX > -100 && barX < 250) || (barX > 537 && barX <= 750)) { //little dmg
+      text("10", 375, dmgheight);
+      dmgtaken = 10; //unused variable yet
+    }
+    
+    if ((barX >= 250 && barX <= 355) || (barX >= 420 && barX <= 537)) { //ok dmg
+      text("17", 375, dmgheight);
+      dmgtaken = 17;
+    }
+    
+    if (barX > 355 && barX < 420) { //crit
+      text("21", 375, dmgheight);
+      dmgtaken = 21;
+    }
+    
     dmgheight -= textspeed;
   }
+  
   if (attackframe > 60 && attackframe <= 72) {
     textspeed -= 1;
   }
@@ -541,8 +567,6 @@ void draw() {
   }
 
 
-
-
   if (checkdialogue) {
     fill(255);
     text("* FROGGIT - ATK 4 DEF 5", 70, 520);
@@ -571,25 +595,6 @@ void draw() {
     rect(30, 460, 740, 160);
     proceed = true;
   }
-
-
-
-  //loop
-  //if (reset == 140 && stop == 0) {
-  //  barX = -500;
-  //  counter = 1;
-  //  black = 0;
-  //  white = 255;
-  //  flashes = 0;
-  //  barY = 465;
-  //  attackframe = 0;
-  //  //health = 180;
-  //  textheight = 90;
-  //  textspeed = 5;
-  //  reset = 0;
-  //  bbox = 10;
-
-  //}
 
 
   if (option == FIGHT && fightbar == false) {
@@ -677,6 +682,7 @@ void keyPressed() {
 
 
   if (MENU == false) {
+    hit = false;
     if (option == FIGHT) {
       if (key == 'z' && bargo == false) {
         barX = -100;
@@ -688,6 +694,11 @@ void keyPressed() {
       else if (bargo == true && key == 'z' && fightbar == true) {
         bargo = false;
         hit = true;
+        attackframe = 0;
+        counter = 0;
+        flashes = 0;
+        dmgheight = 90;
+        textspeed = 5;
         slash.play();
         slash.rewind();
       }
