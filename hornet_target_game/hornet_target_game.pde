@@ -98,13 +98,26 @@ void keyReleased() {
 
 
 void mousePressed() {
-  if (mouseX > 400 && mouseX < 600 && mouseY > 400 && mouseY < 500) {
+  if (mouseX > 400 && mouseX < 600 && mouseY > 400 && mouseY < 500 && mode == 1) {
     mode = 2;
+  }
+  
+  if (mouseX > 600 && mouseX < 800 && mouseY > 500 && mouseY < 600 && mode == 3) {
+    mode = 2;
+    stage = 1;
+    misses = 0;
   }
 }
 
+
 void tactile(int x, int y) {
   if (mouseX > 400 && mouseX < 600 && mouseY > 400 && mouseY < 500) {
+    fill(#C6C6C6);
+  }
+}
+
+void tactileLose(int x, int y) {
+  if (mouseX > 600 && mouseX < 800 && mouseY > 500 && mouseY < 600) {
     fill(#C6C6C6);
   }
   

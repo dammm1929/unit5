@@ -34,6 +34,9 @@ void game() {
   ground();
   vy += ay*1.6;
 
+  textSize(70);
+  fill(255);
+  text("you're misses: " + misses + "/5", 100,80);
   
   if (hornety < 530) { // start falling
     vy += ay;
